@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -22,46 +24,53 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-	private static final String CLIENT_ID = "my-client";
+	private static final String CLIENT_ID = "client";
 	/**
 	 * Encoding method prefix is required for DelegatingPasswordEncoder which is 
 	 * default since Spring Security 5.0.0.RC1. </br>
-	 * For the simplicity we are using noop prefix meaning no encryption.</br> 
-	 * Not recommended for the production environments.</br>
 	 */
-	static final String CLIENT_SECRET = "{noop}my-secret";
+	static final String CLIENT_SECRET = "password";
 
 	private static final String GRANT_TYPE_PASSWORD = "password";
 	private static final String AUTHORIZATION_CODE = "authorization_code";
 	private static final String REFRESH_TOKEN = "refresh_token";
+	private static final String IMPLICIT = "implicit";
 	private static final String SCOPE_READ = "read";
 	private static final String SCOPE_WRITE = "write";
-	private static final String TRUST = "trust";
-	private static final int VALID_FOREVER = -1;
+	private static final String ROLE_CLIENT = "ROLE_CLIENT";
+	private static final String ROLE_TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT";
+	private static final String USER = "USER";
 
 	@Autowired
 	private AuthenticationManager authManager;
 
-	@Bean
-	public TokenStore tokenStore() {
-		return new InMemoryTokenStore();
-	}
+	@Autowired
+	private TokenStore tokenStore; 
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		clients
-		.inMemory()
-		.withClient(CLIENT_ID)
-		.secret(CLIENT_SECRET)
-		.authorizedGrantTypes(GRANT_TYPE_PASSWORD, AUTHORIZATION_CODE, REFRESH_TOKEN)
-		.scopes(SCOPE_READ, SCOPE_WRITE, TRUST)
-		.accessTokenValiditySeconds(VALID_FOREVER)
-		.refreshTokenValiditySeconds(VALID_FOREVER);
+		clients.inMemory ()
+		.withClient (CLIENT_ID)
+		.authorizedGrantTypes (GRANT_TYPE_PASSWORD, AUTHORIZATION_CODE, REFRESH_TOKEN, IMPLICIT)
+		.authorities (ROLE_CLIENT, ROLE_TRUSTED_CLIENT, USER)
+		.scopes(SCOPE_READ, SCOPE_WRITE)
+		.autoApprove(Boolean.TRUE)        
+		.secret(passwordEncoder().encode(CLIENT_SECRET));
 	}
-	
+
 	@Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
-        endpoints.tokenStore(tokenStore())
-                .authenticationManager(authManager);
-    }
+	public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
+		endpoints.tokenStore(tokenStore)
+		.authenticationManager(authManager);
+	}
+
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public TokenStore tokenStore() {
+		return new InMemoryTokenStore ();
+	}
 }

@@ -11,7 +11,7 @@ public class Greeting {
 
 	private static final String GREETINGS_FORMAT = "Welcome %s!";
 
-	public String greetings;
+	private String greetings;
 
 	public Greeting() {}
 

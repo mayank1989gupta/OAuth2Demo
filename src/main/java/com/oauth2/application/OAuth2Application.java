@@ -9,11 +9,12 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 
 /**
  * @author MGupta
- *
+ * 
+ * Main Spring Boot class to initiate the application.
  */
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class OAuth2Application {
-
+	//Main method
 	public static void main(String args[]) {
 		SpringApplication.run(OAuth2Application.class, args);
 	}
