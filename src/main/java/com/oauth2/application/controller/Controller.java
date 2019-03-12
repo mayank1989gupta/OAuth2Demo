@@ -23,6 +23,7 @@ import com.oauth2.application.model.Greeting;
 @Validated
 public class Controller {
 
+	//sample restricted service
 	@GetMapping("/user")
 	@ResponseStatus(HttpStatus.OK)
 	public Greeting helloUser() {
@@ -31,6 +32,7 @@ public class Controller {
 		return greeting.get();
 	}
 	
+	//sample restricted service
 	@GetMapping("/admin")
 	@ResponseStatus(HttpStatus.OK)
 	public Greeting helloAdmin() {
@@ -39,6 +41,7 @@ public class Controller {
 		return greeting.get();
 	}
 	
+	//no restriction
 	@GetMapping("/public")
 	@ResponseStatus(HttpStatus.OK)
 	public Greeting helloPublic() {

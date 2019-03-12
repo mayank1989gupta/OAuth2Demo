@@ -44,8 +44,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Autowired
 	private AuthenticationManager authManager;
 
+	//In order to inject this --> the same is defined in the method below
 	@Autowired
-	private TokenStore tokenStore; 
+	private TokenStore tokenStore; //stores the identifiers   
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -55,7 +56,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		.authorities (ROLE_CLIENT, ROLE_TRUSTED_CLIENT, USER)
 		.scopes(SCOPE_READ, SCOPE_WRITE)
 		.autoApprove(Boolean.TRUE)        
-		.secret(passwordEncoder().encode(CLIENT_SECRET));
+		.secret(passwordEncoder().encode(CLIENT_SECRET))
+		.accessTokenValiditySeconds(60).refreshTokenValiditySeconds(5000);
 	}
 
 	@Override
