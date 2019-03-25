@@ -1,21 +1,26 @@
 #Project Title
+	
 	Sample demo application gradle, spring boot and oauth2 implementation --> token store in memory
 
 
 #Pre Requisites
+	
 	gradle, java8
 
 #Code Details
+	
 	The Code/application consists of the Authorization Server &, the Resource Server
 	- Authorization Server: The class to provide the requestor the authorization
 	- Resource Server: The resource would be the Rest API that we want to secure. 
 	
 #Deployment / Run
+	
 	command: 
 	- gradle build
 	- gradle bootrun
 
 #Test Details
+	
 	To check the implementation:
 	- from postman
 		- make a post request to get the token using URL: http://localhost:8004/oauth/token
@@ -32,16 +37,21 @@
     	- try accessing the resource/rest api with the token under the authorization --> bearer token to access the corresponding resource.
 	
 #Built With
+	
 	Gradle, spring boot, gradle
 
 #Versioning
+	
 	Demo Version
 
 #Authors
+	
 	Mayank Gupta
 
 #License
+	
 	-NA
 
 #Acknowledgements
+	
 	-NA
